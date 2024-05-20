@@ -1,0 +1,104 @@
+{
+    "num_agents": 3,
+    "num_vacnJobs": 5,
+    "priorityWeightCoeff": 1,
+    "affinityWeightCoeff": 1,
+    "penalty1": 2,
+    "penalty2": 2,
+    "agents": [
+        0,
+        1,
+        2
+    ],
+    "assgJobs": [
+        0,
+        1,
+        2
+    ],
+    "vacnJobs": [
+        0,
+        1,
+        2,
+        3,
+        4
+    ],
+    "agents_assgJobs": [
+        1,
+        2,
+        0
+    ],
+    "agents_assgJobsAfinnity": [
+        [
+            0.33,
+            0.12,
+            0.4
+        ],
+        [
+            0.0,
+            0.07,
+            0.26
+        ],
+        [
+            0.34,
+            0.28,
+            0.34
+        ]
+    ],
+    "agents_vacnJobsAfinnity": [
+        [
+            0.2,
+            0.06,
+            0.17,
+            0.23,
+            0.08
+        ],
+        [
+            0.16,
+            0.16,
+            0.13,
+            0.21,
+            0.12
+        ],
+        [
+            0.16,
+            0.11,
+            0.29,
+            0.26,
+            0.15
+        ]
+    ],
+    "assgJobs_agents": [
+        2,
+        0,
+        1
+    ],
+    "assgJobs_priority": [
+        1,
+        5,
+        5
+    ],
+    "vacnJobs_priority": [
+        3,
+        3,
+        4,
+        5,
+        4
+    ],
+    "allBinaryVariables": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+    ]
+}

@@ -1,0 +1,69 @@
+local-install:
+	pip install ./src/openqaoa-core
+	pip install ./src/openqaoa-qiskit
+#	pip install ./src/openqaoa-pyquil
+#	pip install ./src/openqaoa-braket
+#	pip install ./src/openqaoa-azure
+#	pip install .
+
+.PHONY: dev-install
+dev-install:
+	pip install -e ./src/openqaoa-core
+	pip install -e ./src/openqaoa-qiskit
+#	pip install -e ./src/openqaoa-pyquil
+	pip install -e ./src/openqaoa-braket
+	pip install -e ./src/openqaoa-azure
+	pip install -e .
+
+.PHONY: dev-install-tests
+dev-install-tests:
+	pip install -e ./src/openqaoa-core[tests]
+	pip install -e ./src/openqaoa-qiskit
+#	pip install -e ./src/openqaoa-pyquil
+	pip install -e ./src/openqaoa-braket
+	pip install -e ./src/openqaoa-azure
+	pip install -e .
+
+.PHONY: dev-install-docs
+dev-install-docs:
+	pip install -e ./src/openqaoa-core[docs]
+	pip install -e ./src/openqaoa-qiskit
+#	pip install -e ./src/openqaoa-pyquil
+#	pip install -e ./src/openqaoa-braket
+#	pip install -e ./src/openqaoa-azure
+#	pip install -e .
+
+.PHONY: dev-install-all
+dev-install-all:
+	pip install -e ./src/openqaoa-core[all]
+	pip install -e ./src/openqaoa-qiskit
+#	pip install -e ./src/openqaoa-pyquil
+	pip install -e ./src/openqaoa-braket
+	pip install -e ./src/openqaoa-azure
+	pip install -e .
+
+.PHONY: dev-uninstall
+dev-uninstall:
+	pip uninstall openqaoa -y
+	pip uninstall openqaoa-core -y
+	pip uninstall openqaoa-qiskit -y
+	pip uninstall openqaoa-pyquil -y
+	pip uninstall openqaoa-braket -y
+	pip uninstall openqaoa-azure -y
+
+
+
+
+
+pandas>=1.3.5
+sympy>=1.10.1
+numpy>=1.22.3
+networkx>=2.8
+matplotlib>=3.4.3
+scipy>=1.8
+docplex==2.25.236
+autograd>=1.4
+semantic_version>=2.10
+autoray>=0.3.1
+requests
+ipython==7.34.0
