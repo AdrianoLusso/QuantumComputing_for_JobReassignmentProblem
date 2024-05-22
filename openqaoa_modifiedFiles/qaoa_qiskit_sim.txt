@@ -208,7 +208,7 @@ class QAOAQiskitBackendShotBasedSimulator(
 
 
         qaoa_circuit = self.qaoa_circuit(params)
-	print('PASO EL QAOACIRCUIT()')
+        print('PASO EL QAOACIRCUIT()')
         counts = (
             self.backend_simulator.run(qaoa_circuit, shots=n_shots)
             .result()
