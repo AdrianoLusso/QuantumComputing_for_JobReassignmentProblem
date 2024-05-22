@@ -1,3 +1,7 @@
+#This file stores instructions to install openqaoa in developer mode.
+#Currently can only install all packages together for developer mode.
+
+.PHONY: local-install
 local-install:
 	pip install ./src/openqaoa-core
 	pip install ./src/openqaoa-qiskit
@@ -29,9 +33,9 @@ dev-install-docs:
 	pip install -e ./src/openqaoa-core[docs]
 	pip install -e ./src/openqaoa-qiskit
 #	pip install -e ./src/openqaoa-pyquil
-#	pip install -e ./src/openqaoa-braket
-#	pip install -e ./src/openqaoa-azure
-#	pip install -e .
+	pip install -e ./src/openqaoa-braket
+	pip install -e ./src/openqaoa-azure
+	pip install -e .
 
 .PHONY: dev-install-all
 dev-install-all:
@@ -54,7 +58,6 @@ dev-uninstall:
 
 
 
-
 pandas>=1.3.5
 sympy>=1.10.1
 numpy>=1.22.3
@@ -67,3 +70,14 @@ semantic_version>=2.10
 autoray>=0.3.1
 requests
 ipython==7.34.0
+
+
+
+---- PARA EL GPU
+
+qiskit>=0.36.1,<1.0
+qiskit-ibm-provider
+qiskit-aer-gpu
+
+
+cambiar el automatic method a statevector en qiskit sim,aprox linea 116 y el device='GPU'
