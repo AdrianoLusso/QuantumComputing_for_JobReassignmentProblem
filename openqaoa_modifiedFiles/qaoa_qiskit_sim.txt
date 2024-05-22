@@ -206,7 +206,9 @@ class QAOAQiskitBackendShotBasedSimulator(
         # set the number of shots, if not specified take the default
         n_shots = self.n_shots if n_shots == None else n_shots
 
+	print(self.backend_simulator)
         qaoa_circuit = self.qaoa_circuit(params)
+	print('PASO EL QAOACIRCUIT()')
         counts = (
             self.backend_simulator.run(qaoa_circuit, shots=n_shots)
             .result()
