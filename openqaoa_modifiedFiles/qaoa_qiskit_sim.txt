@@ -136,9 +136,11 @@ class QAOAQiskitBackendShotBasedSimulator(
             The final QAOA circuit after binding angles from variational parameters.
         """
         angles_list = self.obtain_angles_for_pauli_list(self.abstract_circuit, params)
+        print('PASO ANGLES LIST')
         memory_map = dict(zip(self.qiskit_parameter_list, angles_list))
+        print('PASO MEMORY MAP')
         circuit_with_angles = self.parametric_circuit.bind_parameters(memory_map)
-
+        print('PASO EL WITH ANGLES')
         if self.append_state:
             circuit_with_angles = circuit_with_angles.compose(self.append_state)
         circuit_with_angles.measure_all()
