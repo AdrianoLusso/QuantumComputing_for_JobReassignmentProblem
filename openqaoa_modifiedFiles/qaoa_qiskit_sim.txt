@@ -149,7 +149,7 @@ class QAOAQiskitBackendShotBasedSimulator(
 
 
         print(memory_map)
-        sub_memory_maps = split_dict(memory_map)
+        sub_memory_maps = self.split_dict(memory_map)
         for sub_memory_map in sub_memory_maps:
             print('UNA ITR')
             circuit_with_angles = self.parametric_circuit.assign_parameters(memory_map)
