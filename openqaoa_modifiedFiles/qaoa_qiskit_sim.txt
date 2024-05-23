@@ -122,6 +122,12 @@ class QAOAQiskitBackendShotBasedSimulator(
         # For parametric circuits
         self.parametric_circuit = self.parametric_qaoa_circuit
 
+    def split_dict(d):
+        keys = list(d.keys())
+        n=2
+
+        return [{k: d[k] for k in keys[i::n]} for i in range(n)]
+
     def qaoa_circuit(self, params: QAOAVariationalBaseParams) -> QuantumCircuit:
         """
         The final QAOA circuit to be executed on the QPU.
@@ -140,10 +146,15 @@ class QAOAQiskitBackendShotBasedSimulator(
         memory_map = dict(zip(self.qiskit_parameter_list, angles_list))
         print('PASO MEMORY MAP')
         #PREGUNTAR lo de aca abajo, le pusse assign en vez de bind
-        #circuit_with_angles = self.parametric_circuit.copy()
-        #circuit_with_angles.assign_parameters(memory_map,inplace=True)
+
+
         print(memory_map)
-        circuit_with_angles = self.parametric_circuit.assign_parameters(memory_map)
+        sub_memory_maps = split_dict(memory_map)
+        for sub_memory_map in sub_memory_maps:
+            print('UNA ITR')
+            circuit_with_angles = self.parametric_circuit.assign_parameters(memory_map)
+        
+
         print('PASO EL WITH ANGLES')
         if self.append_state:
             circuit_with_angles = circuit_with_angles.compose(self.append_state)
