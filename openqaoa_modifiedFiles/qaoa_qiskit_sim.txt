@@ -139,7 +139,8 @@ class QAOAQiskitBackendShotBasedSimulator(
         print('PASO ANGLES LIST')
         memory_map = dict(zip(self.qiskit_parameter_list, angles_list))
         print('PASO MEMORY MAP')
-        circuit_with_angles = self.parametric_circuit.bind_parameters(memory_map)
+        #PREGUNTAR lo de aca abajo, le pusse assign en vez de bind
+        circuit_with_angles = self.parametric_circuit.assign_parameters(memory_map)
         print('PASO EL WITH ANGLES')
         if self.append_state:
             circuit_with_angles = circuit_with_angles.compose(self.append_state)
