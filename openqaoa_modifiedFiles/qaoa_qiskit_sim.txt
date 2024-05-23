@@ -92,7 +92,7 @@ class QAOAQiskitBackendShotBasedSimulator(
         append_state: Optional[QuantumCircuit],
         init_hadamard: bool,
         cvar_alpha: float,
-        qiskit_simulation_method: str = "automatic",
+        qiskit_simulation_method: str = "statevector",
         seed_simulator: Optional[int] = None,
         noise_model: Optional[NoiseModel] = None,
     ):
@@ -208,7 +208,7 @@ class QAOAQiskitBackendShotBasedSimulator(
 
 
         qaoa_circuit = self.qaoa_circuit(params)
-        print('PASO EL QAOACIRCUIT()')
+        print('PASO EL QAOACIRCUIT()',)
         counts = (
             self.backend_simulator.run(qaoa_circuit, shots=n_shots)
             .result()
