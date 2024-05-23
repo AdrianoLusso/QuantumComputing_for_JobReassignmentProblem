@@ -122,7 +122,7 @@ class QAOAQiskitBackendShotBasedSimulator(
         # For parametric circuits
         self.parametric_circuit = self.parametric_qaoa_circuit
 
-    def split_dict(d):
+    def split_dict(self,d):
         keys = list(d.keys())
         n=2
 
