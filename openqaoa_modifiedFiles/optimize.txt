@@ -373,7 +373,7 @@ class QAOA(Workflow):
         """
         A method running the classical optimisation loop
         """
-	print('LA CTM')
+        print('LA CTM')
         if self.compiled is False:
             raise ValueError("Please compile the QAOA before optimizing it!")
 
