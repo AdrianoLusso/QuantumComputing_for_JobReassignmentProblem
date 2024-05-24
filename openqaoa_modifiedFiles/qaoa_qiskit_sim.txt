@@ -92,7 +92,7 @@ class QAOAQiskitBackendShotBasedSimulator(
         append_state: Optional[QuantumCircuit],
         init_hadamard: bool,
         cvar_alpha: float,
-        qiskit_simulation_method: str = "statevector",
+        qiskit_simulation_method: str = 'automatic'
         seed_simulator: Optional[int] = None,
         noise_model: Optional[NoiseModel] = None,
     ):
