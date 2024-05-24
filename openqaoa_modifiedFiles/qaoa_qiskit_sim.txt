@@ -220,7 +220,7 @@ class QAOAQiskitBackendShotBasedSimulator(
             .get_counts()
         )
         self.count_optimization += 1
-	print('ITERATION ',self.count_optimization,'\n')
+        print('ITERATION ',self.count_optimization,'\n')
 
 
         final_counts = flip_counts(counts)
