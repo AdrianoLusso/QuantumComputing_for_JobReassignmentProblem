@@ -105,6 +105,7 @@ class QAOAQiskitBackendShotBasedSimulator(
             init_hadamard,
             cvar_alpha,
         )
+        self.count_optimization = 0
         self.gate_applicator = QiskitGateApplicator()
         self.qureg = QuantumRegister(self.n_qubits)
 
@@ -218,6 +219,9 @@ class QAOAQiskitBackendShotBasedSimulator(
             .result()
             .get_counts()
         )
+        self.count_optimization += 1
+	print('ITERATION ',self.count_optimization,'\n')
+
 
         final_counts = flip_counts(counts)
         self.measurement_outcomes = final_counts
