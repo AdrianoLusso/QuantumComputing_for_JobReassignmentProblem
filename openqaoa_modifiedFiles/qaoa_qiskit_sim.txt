@@ -142,20 +142,9 @@ class QAOAQiskitBackendShotBasedSimulator(
             The final QAOA circuit after binding angles from variational parameters.
         """
         angles_list = self.obtain_angles_for_pauli_list(self.abstract_circuit, params)
-        print('PASO ANGLES LIST')
         memory_map = dict(zip(self.qiskit_parameter_list, angles_list))
-        print('PASO MEMORY MAP')
-        #PREGUNTAR lo de aca abajo, le pusse assign en vez de bind
-
-
-        print(memory_map)
-        sub_memory_maps = self.split_dict(memory_map)
-        for sub_memory_map in sub_memory_maps:
-            print('UNA ITR')
-            circuit_with_angles = self.parametric_circuit.assign_parameters(memory_map)
+        circuit_with_angles = self.parametric_circuit.assign_parameters(memory_map)
         
-
-        print('PASO EL WITH ANGLES')
         if self.append_state:
             circuit_with_angles = circuit_with_angles.compose(self.append_state)
         circuit_with_angles.measure_all()
@@ -223,9 +212,7 @@ class QAOAQiskitBackendShotBasedSimulator(
         # set the number of shots, if not specified take the default
         n_shots = self.n_shots if n_shots == None else n_shots
 
-        print('ANTES QAOAOCIRCUIT()')
         qaoa_circuit = self.qaoa_circuit(params)
-        print('PASO EL QAOACIRCUIT()',)
         counts = (
             self.backend_simulator.run(qaoa_circuit, shots=n_shots)
             .result()
