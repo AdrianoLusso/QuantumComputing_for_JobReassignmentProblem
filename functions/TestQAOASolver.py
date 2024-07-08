@@ -159,7 +159,7 @@ class TestQAOASolver:
         initial_standard_gain = jrp.calculate_standard_gain(initial_standard_solution)
 
         #optimal configuration
-        opt_standard_solution,opt_standard_gain = jrp.solve_standard_with_bruteforce(debug_every=100000)
+        opt_standard_solution,opt_standard_gain = jrp.solve_standard_with_bruteforce(debug_every=0)
         
         # final configuration - after QAOA optimization
         final_standard_solution,final_standard_gain,initial_ising_cost,final_ising_cost,qaoa_result = self.__run_qaoa_workflow(
