@@ -22,10 +22,10 @@ class TestQAOASolver:
         TODO
         '''
         pass
-
+    #n_shots_for_optimization,n_shots_for_validation
     def sample_workflows(self,configuration_name,n_samples,jrp_init_configuration,circuit_configuration,
-                         optimizer_configuration,n_shots_for_optimization,
-                          n_shots_for_validation,device=None):
+                         optimizer_configuration,optimization_backend_configuration,
+                         evaluation_backend_configuration,device=None):
         '''
         this method do a sample of 'testQAOAsolver' workflows and save them in json files.
 
@@ -83,8 +83,8 @@ class TestQAOASolver:
             approximation_ratio,standard_gain_difference, ising_cost_difference,opt_standard_solution, final_standard_solution,qaoa_result = self.__run_workflow(
                 jrp,circuit_configuration,
                 optimizer_configuration,
-                n_shots_for_optimization,
-                n_shots_for_validation,
+                optimization_backend_configuration,
+                evaluation_backend_configuration,
                 device
             )
 
@@ -103,7 +103,9 @@ class TestQAOASolver:
                 json.dump(samples, file, ensure_ascii=False, indent=4)
     
 
-    def __run_workflow(self,jrp,circuit_configuration, optimizer_configuration, n_shots_for_optimization, n_shots_for_validation,device):
+    def __run_workflow(self,jrp,circuit_configuration, optimizer_configuration,
+                       optimization_backend_configuration,
+                       evaluation_backend_configuration,device):
         '''
         This method runs A 'testQAOAsolver' workflow for a particular JRP instance.
 
@@ -163,8 +165,8 @@ class TestQAOASolver:
             jrp,
             circuit_configuration,
         optimizer_configuration, 
-        n_shots_for_optimization, 
-        n_shots_for_validation,device
+        optimization_backend_configuration,
+        evaluation_backend_configuration,device
         )
 
         if opt_standard_gain == 0:
@@ -178,7 +180,8 @@ class TestQAOASolver:
 
         return approximation_ratio,standard_gain_difference,ising_cost_difference,opt_standard_solution,final_standard_solution,qaoa_result
 
-    def __run_qaoa_workflow(self,jrp,circuit_configuration, optimizer_configuration, n_shots_for_optimization, n_shots_for_validation,device):
+    def __run_qaoa_workflow(self,jrp,circuit_configuration, optimizer_configuration, optimization_backend_configuration,
+                       evaluation_backend_configuration,device):
         '''
         this  methods runs the QAOA workflow (sub-workflow of the complete 'testQAOASolver') for a particular JRP instance
 
@@ -230,7 +233,7 @@ class TestQAOASolver:
         #device = create_device(location='local', name='qiskit.shot_simulator')
         qaoa.set_device(device)
         qaoa.set_circuit_properties(**circuit_configuration)
-        qaoa.set_backend_properties(n_shots=n_shots_for_optimization)
+        qaoa.set_backend_properties(**optimization_backend_configuration)
         qaoa.set_classical_optimizer(**optimizer_configuration)
         
         #compile
@@ -250,7 +253,7 @@ class TestQAOASolver:
         qaoa = QAOA()
         qaoa.set_device(device)
         qaoa.set_circuit_properties(**circuit_configuration)
-        qaoa.set_backend_properties(n_shots=n_shots_for_validation)
+        qaoa.set_backend_properties(**evaluation_backend_configuration)
         qaoa.compile(jrp_ising)
         preliminary_qubo_solutions = qaoa.evaluate_circuit(qaoa_result.optimized['angles'])['measurement_results']
 
