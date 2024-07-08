@@ -59,7 +59,7 @@ class JRPRandomGenerator:
 
 
     def __init__(self,num_agents=None,num_vacnJobs=None,priorityWeightCoeff=1,affinityWeightCoeff=1,
-        penalty1=2,penalty2=2,control_restrictions=True):
+        penalty1=2,penalty2=2,max_assgJobs_priority = 3,control_restrictions=True):
         '''
           Parameters (described at the first comment of the class):
             
@@ -69,6 +69,10 @@ class JRPRandomGenerator:
             - affinityWeightCoeff (optinal)
             - penalty1 (optional)
             - penalty2 (optional)
+            - max_assgJobs_priority
+                an integer M describing the maximum priority that an assigned job could have, and the minimum
+                priority a vacant job could have. That is, every assigned job can have priority in [1,M] and
+                every vacant job can have priority in [M,5]
             - controlRestrictions
                 if True, the generator controls restrictions over number of agents and vacancy jobs
           '''
@@ -79,6 +83,7 @@ class JRPRandomGenerator:
         self.affinityWeightCoeff = affinityWeightCoeff
         self.penalty1 = penalty1
         self.penalty2 = penalty2
+        self.max_assgJobs_priority = max_assgJobs_priority
         self.control_restrictions = control_restrictions
         
         # priorities range and affinity maximum value
@@ -209,9 +214,12 @@ class JRPRandomGenerator:
         Return:
             - the lists of assigned jobs priorities and vacant jobs priorites
         '''
-        #PREGUNTAR arreglar lo de que los vacantes deben ser mayor o igual que los assigned
-        assgJobs_priority = r.choices(self.priorities, k=self.num_agents)
-        vacnJobs_priority = r.choices(self.priorities,weights=range(1, len(self.priorities) + 1), k=self.num_vacnJobs)
+        assgJobs_priorities_domain = self.priorities[:self.max_assgJobs_priority]
+        vacnJobs_priorities_domain = self.priorities[self.max_assgJobs_priority-1:]
+
+        assgJobs_priority = r.choices(assgJobs_priorities_domain, k=self.num_agents)
+        vacnJobs_priority = r.choices(vacnJobs_priorities_domain,weights=vacnJobs_priorities_domain, k=self.num_vacnJobs)
+        #range(1, len(self.priorities) + 1)
         return assgJobs_priority,vacnJobs_priority
 
     def __diff_matrixes(self,
