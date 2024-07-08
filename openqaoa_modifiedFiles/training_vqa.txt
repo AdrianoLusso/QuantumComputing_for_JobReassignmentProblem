@@ -508,7 +508,7 @@ class ScipyOptimizer(OptimizeVQA):
                     constraints=self.constraints,
                     options=self.options,
                     bounds=self.bounds,
-                    callback=custom_callback
+                    callback=self.__custom_callback
                 )
         except ConnectionError as e:
             print(e, "\n")
