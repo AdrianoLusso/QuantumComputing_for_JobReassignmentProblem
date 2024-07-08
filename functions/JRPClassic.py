@@ -1,5 +1,7 @@
 
 import itertools
+import sys
+import ipywidgets as widgets
 
 # TODO podriamos cambiarle el nombre para que no haya confusion sobre que aca este embedido todo lo del QAOA
 # que se note que no esta embebido el QAOA, capaz llamarlo JRPClassic
@@ -267,6 +269,10 @@ class JRPClassic:
             - the optimal solution and the optimal gain
         '''   
 
+        if debug_every != 0:
+            output_area = widgets.Output()
+            display(output_area)
+
 
         weighted_priority_diff_matrix = self.instance_dict['weighted_priority_diff_matrix']
         weighted_affinity_diff_matrix = self.instance_dict['weighted_affinity_diff_matrix'] 
@@ -275,13 +281,15 @@ class JRPClassic:
         combinations = itertools.product(range(-1,self.instance_dict['num_vacnJobs']),
                                          repeat=self.instance_dict['num_agents'])
         total_combinations = (self.instance_dict['num_vacnJobs']+1)**self.instance_dict['num_agents']
-
         # do the brute force 
         opt_gain = None
         opt_solution = None
         for itr_combination,combination in enumerate(combinations):
             # if the combination doesn't respect the first constraint, it is not evaluated
             if self.__violate_one_agent_per_job(combination):
+                self.__short_debug_solve_standard_with_bruteforce(debug_every,itr_combination,
+                                                        output_area,total_combinations,
+                                                        combination)
                 continue
             # the combination gain is calculated
             gain = self.calculate_standard_gain(combination,minimization)
@@ -294,20 +302,26 @@ class JRPClassic:
                 opt_solution = combination
 
             # debug prints
-            if debug_every > 0 and itr_combination % debug_every == 0:
+            self.__complete_debug_solve_standard_with_bruteforce(debug_every,itr_combination,
+                                                        minimization,output_area,total_combinations,
+                                                        combination,gain,opt_gain,opt_solution)
+            '''if debug_every > 0 and itr_combination % debug_every == 0:
                 if minimization:
                     text = 'cost'
                 else:
                     text = 'gain'
-                
-                print('==========================================================')
-                print('ITERATION ',itr_combination+1,' OF ', total_combinations)
-                print('current combination: ',combination)
-                print('current ',text,': ',gain)
-                print()
-                print('current optimal ',text,': ',opt_gain)
-                print('current optimal solution: ',opt_solution)
-                print('==========================================================\n')
+                #if itr_combination != 0:
+                #    self.__clear_previous_lines(8)
+                with output_area:
+                    output_area.clear_output(wait=True)
+                    print('==========================================================')
+                    print('ITERATION ',itr_combination+1,' OF ', total_combinations)
+                    print('current combination: ',combination)
+                    print('current ',text,': ',gain)
+                    print()
+                    print('current optimal ',text,': ',opt_gain)
+                    print('current optimal solution: ',opt_solution)
+                    print('==========================================================\n')'''
         
         return list(opt_solution),opt_gain
             
@@ -383,3 +397,39 @@ class JRPClassic:
                 already_reasigned_agents.append(agent)
         
         return False
+    
+    def __complete_debug_solve_standard_with_bruteforce(self,debug_every,itr_combination,
+                                                        minimization,output_area,total_combinations,
+                                                        combination,gain,opt_gain,opt_solution):
+        if debug_every > 0 and (itr_combination+1) % debug_every == 0 or (itr_combination+1) == 1:
+                if minimization:
+                    text = 'cost'
+                else:
+                    text = 'gain'
+                #if itr_combination != 0:
+                #    self.__clear_previous_lines(8)
+                with output_area:
+                    output_area.clear_output(wait=True)
+                    print('==========================================================')
+                    print('ITERATION ',itr_combination+1,' OF ', total_combinations)
+                    print('current combination: ',combination)
+                    print('current ',text,': ',gain)
+                    print()
+                    print('current optimal ',text,': ',opt_gain)
+                    print('current optimal solution: ',opt_solution)
+                    print('==========================================================\n')
+
+    def __short_debug_solve_standard_with_bruteforce(self,debug_every,itr_combination,
+                                                        output_area,total_combinations,
+                                                        combination):
+        if debug_every > 0 and (itr_combination+1) % debug_every == 0 or (itr_combination+1) == 1:
+                with output_area:
+                    output_area.clear_output(wait=True)
+                    print('==========================================================')
+                    print('ITERATION ',itr_combination+1,' OF ', total_combinations)
+                    print('current combination: ',combination)
+                    print()
+                    print()
+                    print()
+                    print()
+                    print('==========================================================\n')
