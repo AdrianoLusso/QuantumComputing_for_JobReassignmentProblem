@@ -268,10 +268,11 @@ class JRPClassic:
         Return:
             - the optimal solution and the optimal gain
         '''   
-
+        output_area = None
         if debug_every != 0:
             output_area = widgets.Output()
             display(output_area)
+            
 
 
         weighted_priority_diff_matrix = self.instance_dict['weighted_priority_diff_matrix']
