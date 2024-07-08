@@ -266,6 +266,7 @@ class OptimizeVQA(ABC):
 
         self.log.log_variables(log_dict)
 
+        print('SADASD')
         return callback_cost
 
     @abstractmethod
