@@ -2,6 +2,7 @@ from openqaoa import QAOA
 from openqaoa import QUBO
 from openqaoa.algorithms import QAOAResult
 from openqaoa.backends import create_device
+from qiskit_aer import AerSimulator
 
 #import sys
 #import os
@@ -158,7 +159,7 @@ class TestQAOASolver:
         initial_standard_gain = jrp.calculate_standard_gain(initial_standard_solution)
 
         #optimal configuration
-        #opt_standard_solution,opt_standard_gain = jrp.solve_standard_with_bruteforce(debug_every=100000)
+        opt_standard_solution,opt_standard_gain = jrp.solve_standard_with_bruteforce(debug_every=100000)
         
         # final configuration - after QAOA optimization
         final_standard_solution,final_standard_gain,initial_ising_cost,final_ising_cost,qaoa_result = self.__run_qaoa_workflow(
@@ -238,6 +239,12 @@ class TestQAOASolver:
         
         #compile
         qaoa.compile(jrp_ising)
+
+        # if the size of the JRP problem is of 30 or more qubits, change the precision to single
+        if len(jrp.instance_dict['allBinaryVariables']) >29:
+            qaoa.backend.backend_simulator = AerSimulator(precision='single')
+
+
 
         # get the initial ising cost, using the initial variational parameters
         initial_ising_cost = qaoa.evaluate_circuit(qaoa.variate_params.asdict())['cost']

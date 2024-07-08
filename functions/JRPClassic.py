@@ -305,24 +305,8 @@ class JRPClassic:
             self.__complete_debug_solve_standard_with_bruteforce(debug_every,itr_combination,
                                                         minimization,output_area,total_combinations,
                                                         combination,gain,opt_gain,opt_solution)
-            '''if debug_every > 0 and itr_combination % debug_every == 0:
-                if minimization:
-                    text = 'cost'
-                else:
-                    text = 'gain'
-                #if itr_combination != 0:
-                #    self.__clear_previous_lines(8)
-                with output_area:
-                    output_area.clear_output(wait=True)
-                    print('==========================================================')
-                    print('ITERATION ',itr_combination+1,' OF ', total_combinations)
-                    print('current combination: ',combination)
-                    print('current ',text,': ',gain)
-                    print()
-                    print('current optimal ',text,': ',opt_gain)
-                    print('current optimal solution: ',opt_solution)
-                    print('==========================================================\n')'''
         
+        output_area.close()
         return list(opt_solution),opt_gain
             
     ''' AUXILIAR '''
@@ -422,7 +406,10 @@ class JRPClassic:
     def __short_debug_solve_standard_with_bruteforce(self,debug_every,itr_combination,
                                                         output_area,total_combinations,
                                                         combination):
-        if debug_every > 0 and (itr_combination+1) % debug_every == 0 or (itr_combination+1) == 1:
+        if (debug_every > 0 
+            and (itr_combination+1) % debug_every == 0 
+            or (itr_combination+1) == 1
+            or (itr_combination+1) == total_combinations):
                 with output_area:
                     output_area.clear_output(wait=True)
                     print('==========================================================')
