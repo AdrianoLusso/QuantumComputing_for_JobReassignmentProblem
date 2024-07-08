@@ -307,7 +307,8 @@ class JRPClassic:
                                                         minimization,output_area,total_combinations,
                                                         combination,gain,opt_gain,opt_solution)
         
-        output_area.close()
+        if debug_every != 0:
+            output_area.close()
         return list(opt_solution),opt_gain
             
     ''' AUXILIAR '''
@@ -386,7 +387,12 @@ class JRPClassic:
     def __complete_debug_solve_standard_with_bruteforce(self,debug_every,itr_combination,
                                                         minimization,output_area,total_combinations,
                                                         combination,gain,opt_gain,opt_solution):
-        if debug_every > 0 and (itr_combination+1) % debug_every == 0 or (itr_combination+1) == 1:
+        if (debug_every > 0 
+            and (
+                (itr_combination+1) % debug_every == 0 
+                or (itr_combination+1) == 1
+                or (itr_combination+1) == total_combinations)
+            ):
                 if minimization:
                     text = 'cost'
                 else:
@@ -408,9 +414,11 @@ class JRPClassic:
                                                         output_area,total_combinations,
                                                         combination):
         if (debug_every > 0 
-            and (itr_combination+1) % debug_every == 0 
-            or (itr_combination+1) == 1
-            or (itr_combination+1) == total_combinations):
+            and (
+                (itr_combination+1) % debug_every == 0 
+                or (itr_combination+1) == 1
+                or (itr_combination+1) == total_combinations)
+            ):
                 with output_area:
                     output_area.clear_output(wait=True)
                     print('==========================================================')
