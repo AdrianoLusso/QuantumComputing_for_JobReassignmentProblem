@@ -3,6 +3,8 @@ from openqaoa import QUBO
 from openqaoa.algorithms import QAOAResult
 from openqaoa.backends import create_device
 from qiskit_aer import AerSimulator
+import gzip
+import shutil
 
 #import sys
 #import os
@@ -97,6 +99,7 @@ class TestQAOASolver:
             )
 
             # creates the sample data structure and saves it
+            postprocessed_qaoa_result = self.postprocess_qaoaresult(qaoa_result.asdict())
             sample = {
                 'instance': jrp_instance_dict,
                 'approximation_ratio':approximation_ratio,
@@ -104,11 +107,15 @@ class TestQAOASolver:
                 'ising_cost_difference':ising_cost_difference,
                 'opt_standard_solution':opt_standard_solution,
                 'final_standard_solution':final_standard_solution,
-                'result':qaoa_result.asdict()
+                'result':postprocessed_qaoa_result
             }
             samples[sample_index] = sample
             with open('./conf%s.json'%(str(configuration_name)), 'w', encoding='utf-8') as file:
                 json.dump(samples, file, ensure_ascii=False, indent=4)
+            with open('./conf%s.json'%(str(configuration_name)), 'rb') as f_in:
+                with gzip.open('./conf%s.gz'%(str(configuration_name)), 'wb') as f_out:
+                    shutil.copyfileobj(f_in, f_out)
+
 
     def sample_workflows_with_fixedInstances(self,configuration_name,circuit_configuration,
                          optimizer_configuration,optimization_backend_configuration,
@@ -175,6 +182,7 @@ class TestQAOASolver:
             )
 
             # creates the sample dats structure and saves it
+            postprocessed_qaoa_result = self.postprocess_qaoaresult(qaoa_result.asdict())
             sample = {
                 'instance': jrp_instance_dict,
                 'approximation_ratio':approximation_ratio,
@@ -182,11 +190,16 @@ class TestQAOASolver:
                 'ising_cost_difference':ising_cost_difference,
                 'opt_standard_solution':opt_standard_solution,
                 'final_standard_solution':final_standard_solution,
-                'result':qaoa_result.asdict()
+                'result':postprocessed_qaoa_result
             }
             samples[sample_index] = sample
+            
+            # save the json and compress it
             with open('./conf%s.json'%(str(configuration_name)), 'w', encoding='utf-8') as file:
                 json.dump(samples, file, ensure_ascii=False, indent=4)
+            with open('./conf%s.json'%(str(configuration_name)), 'rb') as f_in:
+                with gzip.open('./conf%s.gz'%(str(configuration_name)), 'wb') as f_out:
+                    shutil.copyfileobj(f_in, f_out)
 
     def __run_workflow(self,jrp,circuit_configuration, optimizer_configuration,
                        optimization_backend_configuration,
@@ -367,8 +380,8 @@ class TestQAOASolver:
                 final_standard_solution = standard_solution
                 final_standard_gain = standard_gain
         
-        return final_standard_solution,final_standard_gain,initial_ising_cost,final_ising_cost,qaoa_result
-    
+        return final_standard_solution,final_standard_gain,initial_ising_cost,final_ising_cost,qaoa_result    
+
     def set_fixedInstances(self,jrp_init_configuration,n_instances):
         '''
         TODO
@@ -393,85 +406,13 @@ class TestQAOASolver:
         self.fixedInstances = None
         self.jrp_init_configuration = None
 
-class TestQAOASolver_JRPsampler(TestQAOASolver):
-    '''
-
-    '''
-    def __init__(self):
+    # AUXILIARY
+    def postprocess_qaoaresult(self,result_dict):
         '''
         TODO
         '''
-        pass
+        cost_history = result_dict['intermediate']['cost']
+        result_dict.pop('intermediate')
+        result_dict['cost_history'] = cost_history
 
-    def sample_workflows(self,configuration_name,n_samples,jrp_init_configuration,circuit_configuration,
-                         optimizer_configuration,optimization_backend_configuration,
-                         evaluation_backend_configuration,device=None):
-        '''
-        this method do a sample of 'testQAOAsolver' workflows and save them in json files.
-
-        Parameters:
-            - configuration_name
-                a string with the name of the configuration, so as to identify the json file
-            - n_samples            
-            - jrp_init_configuration
-                a dictionary with the parameters for the JRPRandomGenerator. This should specify:
-                    ^ num_agents: integer
-                    ^ num_vacnJobs: integer
-                    ^ control_restrictions: boolean
-            - circuit_configuration
-                a dictionary with the parameters for the set_circuit_properties() method of a QAOA object. This should specify:
-                    ^ p
-                    ^ param_type
-                    ^ init_type
-                    ^ mixer_hamiltonian
-                more info about possible parameters values in OpenQAOA docs.
-            - optimized_configuration
-                a dictionary with the parameters for the set_classical_optimizer() method of a QAOA object. This should specify:
-                    ^ method
-                    ^ maxfev
-                    ^ tol
-                    ^ optimization_progress: boolean
-                    ^ cost_progress: boolean
-                    ^ parameter_log: boolean
-                more info about possible parameters values in OpenQAOA docs.
-            - n_shots_for_optimization
-                the integer number of shots for the quantum ansatz during the quantum-classical optimization loop
-            - n_shots_for_validation
-                the integer number of shots for the quantum ansatz during the validation of the optimized variational parameters.
-                The number of this parameters will be the number of solutions that will be evaluated as possible solutions.
-            - device
-                the device where QAOA will be run.
-        '''
-        
-        device, jrp_gen = super().sample_workflows(jrp_init_configuration,device)
-
-
-class TestQAOASolver_QAOAsampler(TestQAOASolver):
-    '''
-    '''
-    def __init__(self):
-        '''
-        TODO
-        '''
-        pass
-
-    def sample_workflows(self,configuration_name,n_jrp_instances,jrp_init_configuration,circuit_configurations,
-                         optimizer_configurations,optimization_backend_configurations,
-                         evaluation_backend_configurations,device=None):
-        '''
-        '''
-        device, jrp_gen = super().sample_workflows(jrp_init_configuration,device)
-
-        # create the fixed set of JRP instances
-        jrps = []
-        for _ in n_jrp_instances:
-            #create a random instance
-            jrp_instance_dict = jrp_gen.generate_random_instance()
-            jrp_instance_dict = json.loads(jrp_instance_dict)
-            jrp = JRPClassic(jrp_instance_dict)
-            jrps.append(jrp)
-
-        # starts the sampling
-        samples = {'configuration':jrp_init_configuration}
-        for sample_index in range(n_samples):
-            pass
+        return result_dict
