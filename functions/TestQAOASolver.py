@@ -338,10 +338,11 @@ class TestQAOASolver:
         
         #compile
         qaoa.compile(jrp_ising)
+        qaoa.backend.backend_simulator = AerSimulator(precision='single')
 
         # if the size of the JRP problem is of 30 or more qubits, change the precision to single
-        if len(jrp.instance_dict['allBinaryVariables']) >29:
-            qaoa.backend.backend_simulator = AerSimulator(precision='single')
+        #if len(jrp.instance_dict['allBinaryVariables']) >29:
+        #    qaoa.backend.backend_simulator = AerSimulator(precision='single')
 
 
 
