@@ -3,7 +3,7 @@ from openqaoa import QUBO
 from openqaoa.algorithms import QAOAResult
 from openqaoa.backends import create_device
 from qiskit_aer import AerSimulator
-import gzip
+#import gzip
 import shutil
 
 #import sys
@@ -199,9 +199,11 @@ class TestQAOASolver:
             # save the json and compress it
             with open('./conf%s.json'%(str(configuration_name)), 'w', encoding='utf-8') as file:
                 json.dump(samples, file, ensure_ascii=False, indent=4)
-            with open('./conf%s.json'%(str(configuration_name)), 'rb') as f_in:
-                with gzip.open('./conf%s.gz'%(str(configuration_name)), 'wb') as f_out:
-                    shutil.copyfileobj(f_in, f_out)
+            
+            # THIS WILL CREATE A COMPRESED FILE GZ
+            #with open('./conf%s.json'%(str(configuration_name)), 'rb') as f_in:
+            #    with gzip.open('./conf%s.gz'%(str(configuration_name)), 'wb') as f_out:
+            #        shutil.copyfileobj(f_in, f_out)
 
     def __run_workflow(self,jrp,circuit_configuration, optimizer_configuration,
                        optimization_backend_configuration,
