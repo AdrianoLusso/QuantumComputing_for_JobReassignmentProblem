@@ -1,0 +1,1 @@
+### In this folder, some of the relevant reference for my bachelor thesis is saved

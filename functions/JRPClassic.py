@@ -3,8 +3,6 @@ import itertools
 import sys
 import ipywidgets as widgets
 
-# TODO podriamos cambiarle el nombre para que no haya confusion sobre que aca este embedido todo lo del QAOA
-# que se note que no esta embebido el QAOA, capaz llamarlo JRPClassic
 class JRPClassic:    
     '''  
     This class implements the Job Reassigment Problem (JRP) and a couple of important methods for its classical
