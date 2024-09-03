@@ -5,6 +5,7 @@ from openqaoa.backends import create_device
 from qiskit_aer import AerSimulator
 #import gzip
 import shutil
+from QAOASolver import QAOASolver
 
 #import sys
 #import os
@@ -15,7 +16,7 @@ from JRPClassic import JRPClassic
 from JRPRandomGenerator import JRPRandomGenerator
 
 
-class TestQAOASolver:
+class TestQAOASolver(QAOASolver):
     '''
     TODO
     '''
@@ -27,6 +28,7 @@ class TestQAOASolver:
         self.fixedInstances = None
         self.jrp_init_configuration = None
 
+    # WORKFLOW
     def sample_workflows_with_arbitraryInstances(self,configuration_name,n_samples,jrp_init_configuration,circuit_configuration,
                          optimizer_configuration,optimization_backend_configuration,
                          evaluation_backend_configuration,device=None):
@@ -117,7 +119,6 @@ class TestQAOASolver:
             #with open('./conf%s.json'%(str(configuration_name)), 'rb') as f_in:
             #    with gzip.open('./conf%s.gz'%(str(configuration_name)), 'wb') as f_out:
             #        shutil.copyfileobj(f_in, f_out)
-
 
     def sample_workflows_with_fixedInstances(self,configuration_name,circuit_configuration,
                          optimizer_configuration,optimization_backend_configuration,
@@ -324,29 +325,22 @@ class TestQAOASolver:
             - qaoa_result
                 a QAOA_Result object from OpenQAOA
         '''
-        # create the QUBO in openqaoa
-        jrp.to_qubo()
-        terms,weights = jrp.to_openqaoa_format()
-        terms,weights = QUBO.convert_qubo_to_ising(len(jrp.instance_dict['allBinaryVariables']), terms, weights)
-        jrp_ising = QUBO(n=len(jrp.instance_dict['allBinaryVariables']),terms=terms,weights=weights)
-        
-        # create QAOA solver and configurations
-        qaoa = QAOA()
-        #device = create_device(location='local', name='qiskit.shot_simulator')
-        qaoa.set_device(device)
-        qaoa.set_circuit_properties(**circuit_configuration)
-        qaoa.set_backend_properties(**optimization_backend_configuration)
-        qaoa.set_classical_optimizer(**optimizer_configuration)
+        # gets the ising of the jrp
+        jrp_ising = super().get_jrp_ising(jrp)
+
+        # creates and configure the qaoa for optimization
+        qaoa = super().create_and_configure_qaoa(device,circuit_configuration,
+                                          optimization_backend_configuration,
+                                          jrp_ising,
+                                          optimizer_configuration)
         
         #compile
         qaoa.compile(jrp_ising)
-        qaoa.backend.backend_simulator = AerSimulator(precision='single')
+        #qaoa.backend.backend_simulator = AerSimulator(precision='single')
 
         # if the size of the JRP problem is of 30 or more qubits, change the precision to single
         #if len(jrp.instance_dict['allBinaryVariables']) >29:
         #    qaoa.backend.backend_simulator = AerSimulator(precision='single')
-
-
 
         # get the initial ising cost, using the initial variational parameters
         initial_ising_cost = qaoa.evaluate_circuit(qaoa.variate_params.asdict())['cost']
@@ -358,32 +352,16 @@ class TestQAOASolver:
         # get the final ising cost, using the optimized variational parameters
         final_ising_cost = qaoa_result.optimized['cost']
 
-        # create a new QAOA for sampling bitstrings using the optimized variational parameters
-        qaoa = QAOA()
-        qaoa.set_device(device)
-        qaoa.set_circuit_properties(**circuit_configuration)
-        qaoa.set_backend_properties(**evaluation_backend_configuration)
-        qaoa.compile(jrp_ising)
+        # creates and configure the qaoa for evaluation
+        qaoa = super().create_and_configure_qaoa(device,circuit_configuration,
+                                          evaluation_backend_configuration,
+                                          jrp_ising)
         preliminary_qubo_solutions = qaoa.evaluate_circuit(qaoa_result.optimized['angles'])['measurement_results']
 
-        # only takes the feasible solutions
-        final_qubo_solutions = []
-        for solution in preliminary_qubo_solutions.keys():
-            if jrp.is_qubo_feasible(solution):
-                final_qubo_solutions.append(solution)
-        #print(final_qubo_solutions)
-
-        # translate the solutions from QUBO format to standard format and calculate its gain.
-        # store the pair (standardSolution,gain) with the maximal gain
-        final_standard_gain = float('-inf')
-        final_standard_solution = [-2 for i in range(jrp.instance_dict['num_agents'])]
-        for qubo_solution in final_qubo_solutions:
-            standard_solution = jrp.quboSolution_to_standardSolution(qubo_solution)
-            standard_gain = jrp.calculate_standard_gain(standard_solution)
-            
-            if final_standard_gain < standard_gain:
-                final_standard_solution = standard_solution
-                final_standard_gain = standard_gain
+        # filter the qubo solutions, getting the final standard solution and gain
+        final_standard_solution,final_standard_gain = super().filter_qubo_solutions(
+            jrp,
+            preliminary_qubo_solutions)
         
         return final_standard_solution,final_standard_gain,initial_ising_cost,final_ising_cost,qaoa_result    
 
