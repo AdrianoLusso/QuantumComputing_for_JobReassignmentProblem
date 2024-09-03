@@ -1,5 +1,7 @@
 # Bachelor thesis - Implementing Job Reassignment Problem with Quantum Approximate Optimization Algorithm
 ### Universidad Nacional del Comahue, Argentina, Neuquén
+### Project in progress
+
 Student: Adriano Lusso
 
 Director: Christian Nelson Gimenez
@@ -15,6 +17,9 @@ While the thesis is still in progress, the structure of the alredy done work wil
 
 In this folder, you will find the first and most basic notebook, for start getting into the project. Here, i describe the components of the JRP, made it first QUBO implementation and run some basic tests over the QAOA.
 
+## Experimenting with the 'testQAOAsolver' workflow
+$\textbf{The main experiment in the repository}$. Inside \real directory it can be find the real experiment, the results folder and the result notebook where the data postprocessing is been done. I am currently working on it, so it is uncompleted an may change during the following week.
+
 ## Functions
 
 Here, they are defined the classes and functions used for further more complex experiments. Inside this folder, an 'old' folder will also be available. Here, there some older versions of some functions that had been used in some of the first experiments. While they aren't deleted so as to keep that experiments working, it is recommended to just use the python files in the 'functions' directory.
@@ -28,4 +33,6 @@ In the experiment with small instances, it has been discovered that a remote typ
 
 ## Eperiment with small instances
 
-## Experimenting with the 'testQAOAsolver' workflow
+An auxiliar experiment where i try a few small JRP instances with Google Colab + GPU.
+
+
