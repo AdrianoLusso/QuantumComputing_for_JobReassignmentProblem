@@ -5,6 +5,7 @@ from JRPClassic import JRPClassic
 import numpy as np
 import json
 from scipy.interpolate import interp1d, griddata
+import pandas as pd
 
 
 def hamiltonian_from_dict(hamiltonian_dict):
@@ -126,20 +127,16 @@ def tensor3_for_approximation_ratio(file,q_result=None,create_cost_hamiltonian_o
     with open(directory, 'w') as f:
         json.dump(axis, f)
 
-    '''
-    plt.figure(figsize=(7, 4))
-    plt.contourf(X,Z, Y, levels=20, cmap='viridis')
-    plt.colorbar(label='Probability')
-    plt.xlabel('minimum approximation ratio expected')
-    plt.ylabel('Number of Measurements')
-    #plt.title('Probability of Measuring a Solution with Approximation Error X or Less')
-    plt.grid(True)
-    plt.savefig(plot_directory)
-    plt.show()
-    plt.close()
-    '''
     if plot:
         make_contourf_plot(X,Y,Z)
+    
+    # creates a dataframe to return
+    df = pd.DataFrame(Y.transpose())
+    df.index = X
+    df.index.name = 'min. approx.ratio expected'
+    df.columns = list(Z)
+    df.columns.name = 'measurements'
+    return df
 
 def make_contourf_plot(X,Z,Y,x_label=None,y_label=None,z_label=None,directory=None,ax=None):
     '''
