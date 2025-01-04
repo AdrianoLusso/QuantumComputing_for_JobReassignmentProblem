@@ -6,7 +6,7 @@ Student: Adriano Lusso
 
 Director: Christian Nelson Gimenez
 
-Codirector: Alejandro Mata Ali
+Co-director: Alejandro Mata Ali
 
 ## Description
 This repository has the complete implementation (algorithms, processes and experiments) for the my Computer Science bachelor thesis. The mail goal was to implement the Job Reassignment Problem (JRP) into the Quantum Approximate Optimization Algorithm (QAOA).
@@ -18,7 +18,7 @@ While the thesis is still in progress, the structure of the alredy done work wil
 In this folder, you will find the first and most basic notebook, for start getting into the project. Here, i describe the components of the JRP, made it first QUBO implementation and run some basic tests over the QAOA.
 
 ## Experimenting with the 'testQAOAsolver' workflow
-$\textbf{The main experiment in the repository}$. Inside \real directory it can be find the real experiment, the results folder and the result notebook where the data postprocessing is been done. I am currently working on it, so it is uncompleted an may change during the following week.
+$\textbf{The main experiment in the repository}$. Inside the directory it can be find the real experiment, the results folder and the result notebook where the data postprocessing is been done. I am currently working on it, so it is uncompleted an may change during the following week.
 
 ## Functions
 
@@ -35,4 +35,6 @@ In the experiment with small instances, it has been discovered that a remote typ
 
 An auxiliar experiment where i try a few small JRP instances with Google Colab + GPU.
 
+
+## Experimenting with the 'test3tensorPlot' workflow
 

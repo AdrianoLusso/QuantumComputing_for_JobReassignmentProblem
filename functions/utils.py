@@ -1,7 +1,14 @@
 from openqaoa.qaoa_components import Hamiltonian,PauliOp
+from openqaoa import QAOA
+from openqaoa import create_device
 from openqaoa.algorithms import QAOAResult
-import matplotlib.pyplot as plt
+
 from JRPClassic import JRPClassic
+from QAOASolver import QAOASolver
+
+from math import floor
+from collections import Counter
+import matplotlib.pyplot as plt
 import numpy as np
 import json
 from scipy.interpolate import interp1d, griddata
@@ -33,8 +40,9 @@ def hamiltonian_from_dict(hamiltonian_dict):
     hamiltonian = Hamiltonian(pauli_terms,coeffs, hamiltonian_dict['constant'])
     return hamiltonian
 
-def tensor3_for_approximation_ratio(file,q_result=None,create_cost_hamiltonian_object=True,
-                                         size=5000,n_measures=100,directory=None,plot=False):
+def tensor3_for_approximation_ratio(file,circuit_configuration,q_result=None,create_cost_hamiltonian_object=True,
+                                         size=5000,n_shots_to_sample=10000,
+                                         n_shots_to_extrapolate=100,directory=None,plot=False):
     '''
     creates a 3-tensor where, a point (X,Y,Z) is interpretated as follows:
     "After doing Z measures of the ansatz with the optimized parameters,
@@ -47,7 +55,135 @@ def tensor3_for_approximation_ratio(file,q_result=None,create_cost_hamiltonian_o
         - q_result
         - create_cost_hamiltonian_object
         - size
-        - n_measures
+        - n_shots_to_sample
+        - n_shots_to_extrapolate
+        - directory
+    '''
+    # STEP 1: PARAMETERS CONTROLS
+    # if the QAOAResult object is not given, it is taken from the json file
+    if q_result is None:
+        q_result = QAOAResult.from_dict(file['result'])
+    # if it is indicated to create the Hamiltonian object for the cost hamiltonian
+    if create_cost_hamiltonian_object:
+        q_result.cost_hamiltonian = hamiltonian_from_dict(q_result.cost_hamiltonian)
+
+    # STEP 2: THE JRP IN ISING FORMULATION IS RECREATED.
+    q_solver = QAOASolver()
+    instance_dict = file["instance"]
+    current_jrp = JRPClassic(instance_dict)
+    jrp_ising = q_solver.get_jrp_ising(current_jrp)
+
+    # STEP 3: A QAOA SOLVER IS CONFIGURED FOR SAMPLING 'n_shot_to_samples' SHOTS.
+    device = create_device(location='local', name='qiskit.shot_simulator')
+    qaoa = QAOA()
+    qaoa.set_device(device)
+    qaoa.set_circuit_properties(**circuit_configuration)
+    qaoa.set_backend_properties(n_shots= n_shots_to_sample)
+    qaoa.compile(jrp_ising)
+        
+    # STEP 4: THE MEASUREMENTS OUTCUMES OF THE Q_RESULT ARE REPLACED WITH THE NEW ONES
+    new_measurement_outcomes = qaoa.evaluate_circuit(file['result']['optimized']['angles'])['measurement_results']          
+    q_result.optimized["measurement_outcomes"] = new_measurement_outcomes
+
+    # STEP 2: INITIALIZE IMPORTANT VARIABLES
+    #   - 'size' lowest cost bitstrings, in Ising formulation
+    solutions_bitstring = q_result.lowest_cost_bitstrings(size)['solutions_bitstrings']
+    #   - probabilities of measuring each of the bitstring
+    probabilities = q_result.lowest_cost_bitstrings(size)['probabilities']
+    #   - the JRP instance
+    instance =  JRPClassic(file['instance'])
+    #   - the gain of the optimal standard solution
+    optimal_standard_solution_gain = instance.calculate_standard_gain(file['opt_standard_solution'])
+
+    # STEP 3: CONVERTS ISING SOLUTIONS TO STANDARD ONES AND CALCULATE ITS PROBABILITIES VARIANCES
+    standard_solutions = []
+    aux_probabilities = []
+    variances = {}
+    mean_variance = []
+    for s,p in zip(solutions_bitstring,probabilities):
+        try:
+            # if the method raise an error, means that the solution is unfeasible, so it won't be appended to final list
+            ss=instance.quboSolution_to_standardSolution(s,check_feasibility=True)
+            standard_solutions.append(ss)
+            aux_probabilities.append(p)
+            variances[s] = round(p * (1 - p) / n_shots_to_sample,15)
+        except:
+            pass
+    mean_variance = sum(variances.values()) / len(variances)
+    probabilities = aux_probabilities
+
+    # STEP 4: CALCULATE THE APPROXIMATION RATIOS FOR EACH LOWEST STANDARD SOLUTION
+    approximation_ratios = []
+    for s in standard_solutions:
+        approx_ratio = instance.calculate_standard_gain(s)/optimal_standard_solution_gain
+        approximation_ratios.append(round(approx_ratio,4))
+
+    # STEP 5: SUM UP PROBABILITIES OF REPEATED APPROXIMATION RATIOS
+    aux_dict = {}
+    for ar,p in zip(approximation_ratios,probabilities):
+        # if an aaproximation ratio is alredy in the dictionary, it won't replace the key value, instead, it will sum up the new probability
+        if str(ar) in aux_dict.keys():
+            aux_dict[str(ar)] = aux_dict[str(ar)] + p
+        # else, it will initializate with the new probability
+        else:
+            aux_dict[str(ar)] = p
+    approximation_ratios = [float(i) for i in list(aux_dict.keys())]
+    probabilities = list(aux_dict.values())
+
+    # STEP 6: calculate the Complementary Cumulative Distribution Function over the probabilities
+    # https://en.wikipedia.org/wiki/Cumulative_distribution_function#Complementary_cumulative_distribution_function_(tail_distribution)
+    ccdf = []
+    for index in range(len(probabilities)):
+        ccdf.append(round(np.sum(np.array(probabilities[:index+1])),4))
+
+    # STEP 7: expand the ccdf for over n measures
+    measures = range(n_shots_to_extrapolate)
+    array_3D = np.zeros((n_shots_to_extrapolate, len(ccdf)))
+    for i in range(array_3D.shape[0]):
+        for j in range(array_3D.shape[1]):
+            array_3D[i,j] = 1-(1-ccdf[j])** measures[i]
+
+    # STEP 8: final plot
+    X = approximation_ratios  
+    Z = measures  
+    Y = array_3D
+
+    axis = {
+        'X':X,
+        'Z':list(Z),
+        'Y':Y.tolist(),
+        'one_measurement_probabilities_variances':variances,
+        'one_measurement_probabilities_mean_variances':mean_variance
+    }
+    with open(directory, 'w') as f:
+        json.dump(axis, f)
+
+    if plot:
+        make_contourf_plot(X,Y,Z)
+    
+    # creates a dataframe to return
+    df = pd.DataFrame(Y.transpose())
+    df.index = X
+    df.index.name = 'min. approx.ratio expected'
+    df.columns = list(Z)
+    df.columns.name = 'measurements'
+    return df
+
+def old_tensor3_for_approximation_ratio(file,q_result=None,create_cost_hamiltonian_object=True,
+                                         size=5000,n_shots_to_extrapolate=100,directory=None,plot=False):
+    '''
+    creates a 3-tensor where, a point (X,Y,Z) is interpretated as follows:
+    "After doing Z measures of the ansatz with the optimized parameters,
+    there is a probability of Y that one of that measured solutions has
+    an approximation ratio of X or bigger"
+
+    Parameters:
+        - file
+            a dictionary representing a json file from a TestQAOASolver experiment
+        - q_result
+        - create_cost_hamiltonian_object
+        - size
+        - n_shots_to_extrapolate
         - directory
     '''
     
@@ -108,8 +244,8 @@ def tensor3_for_approximation_ratio(file,q_result=None,create_cost_hamiltonian_o
         ccdf.append(round(np.sum(np.array(probabilities[:index+1])),4))
 
     # STEP 7: expand the ccdf for over n measures
-    measures = range(n_measures)
-    array_3D = np.zeros((n_measures, len(ccdf)))
+    measures = range(n_shots_to_extrapolate)
+    array_3D = np.zeros((n_shots_to_extrapolate, len(ccdf)))
     for i in range(array_3D.shape[0]):
         for j in range(array_3D.shape[1]):
             array_3D[i,j] = 1-(1-ccdf[j])** measures[i]
@@ -138,6 +274,7 @@ def tensor3_for_approximation_ratio(file,q_result=None,create_cost_hamiltonian_o
     df.columns.name = 'measurements'
     return df
 
+
 def make_contourf_plot(X,Z,Y,x_label=None,y_label=None,z_label=None,directory=None,ax=None):
     '''
     '''
@@ -145,6 +282,9 @@ def make_contourf_plot(X,Z,Y,x_label=None,y_label=None,z_label=None,directory=No
     if ax is None:
         fig, ax = plt.subplots(figsize=(7, 4))
 
+    # TODO ultima prueba, descomentar esto y probar 
+    #ax.set_xscale('log')
+    #ax.set_yscale('log')
     c = ax.contourf(X,Z, Y, levels=20, cmap='viridis')
     cbar = plt.colorbar(c,ax=ax,label='Probability')
     ax.set_xlabel('Min. approximation ratio expected')
@@ -152,8 +292,7 @@ def make_contourf_plot(X,Z,Y,x_label=None,y_label=None,z_label=None,directory=No
 
     ax.set_xlim(0.3, 1)
     ax.grid(True)
-    #ax.set_xscale('log')
-    #ax.set_yscale('log')
+
     if directory is not None:
         fig.savefig(directory, bbox_inches='tight')
     #plt.show()
