@@ -275,7 +275,11 @@ def old_tensor3_for_approximation_ratio(file,q_result=None,create_cost_hamiltoni
     return df
 
 
-def make_contourf_plot(X,Z,Y,x_label=None,y_label=None,z_label=None,directory=None,ax=None):
+def make_contourf_plot(X,Z,Y,
+x_label='Min. approximation ratio expected',
+y_label='Measurements',
+z_label='Probability',
+directory=None,ax=None):
     '''
     '''
     
@@ -286,9 +290,12 @@ def make_contourf_plot(X,Z,Y,x_label=None,y_label=None,z_label=None,directory=No
     #ax.set_xscale('log')
     #ax.set_yscale('log')
     c = ax.contourf(X,Z, Y, levels=20, cmap='viridis')
-    cbar = plt.colorbar(c,ax=ax,label='Probability')
-    ax.set_xlabel('Min. approximation ratio expected')
-    ax.set_ylabel('Measurements')
+    cbar = plt.colorbar(c,ax=ax,label=z_label)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+
+    ax.tick_params(axis='both', labelsize=20)
+    cbar.ax.tick_params(labelsize=20)
 
     ax.set_xlim(0.3, 1)
     ax.grid(True)
@@ -298,7 +305,15 @@ def make_contourf_plot(X,Z,Y,x_label=None,y_label=None,z_label=None,directory=No
     #plt.show()
     #plt.close()
 
-def make_average_contour_plot(Xs, Zs, Ys,probability= 0.9,plot_label='average contour',x_label=None,y_label=None,z_label=None,directory=None,ax=None):
+def make_average_contour_plot(Xs, Zs, Ys,probability= 0.9,plot_label='average contour',
+x_label=None,
+y_label=None,
+directory=None,ax=None):
+
+    if x_label is None:
+        x_label = 'Min. approximation ratio expected\nwith a probability '+str(probability)
+    if y_label is None:
+        y_label = 'Measurements\nneeded'
     if ax is None:
         fig, ax = plt.subplots(figsize=(7, 4))
     
@@ -320,8 +335,8 @@ def make_average_contour_plot(Xs, Zs, Ys,probability= 0.9,plot_label='average co
     ax.plot(average_contour[:, 0], average_contour[:, 1], linestyle='--', label=plot_label)
     ax.legend()
     
-    ax.set_xlabel('Min. approximation ratio expected\nwith a probability '+str(probability))
-    ax.set_ylabel('Measurements needed')
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
 
     #y_ticks = np.arange(0, 1100, 100)
     #ax.set_yticks(y_ticks)

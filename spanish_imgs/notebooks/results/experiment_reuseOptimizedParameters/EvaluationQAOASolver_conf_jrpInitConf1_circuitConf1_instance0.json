@@ -1,0 +1,552 @@
+{
+    "reused_instance": {
+        "filename": "conf_jrpInitConf1_circuitConf1",
+        "instance": 0
+    },
+    "conf_jrpInitConf0_circuitConf1": {
+        "0": {
+            "approximation ratio": 0.9793174767321611,
+            "opt_standard_solution": [
+                -1,
+                -1,
+                2,
+                1,
+                0
+            ],
+            "final_standard_solution": [
+                -1,
+                -1,
+                2,
+                0,
+                1
+            ]
+        },
+        "1": {
+            "approximation ratio": 1.0,
+            "opt_standard_solution": [
+                2,
+                -1,
+                0,
+                1,
+                -1
+            ],
+            "final_standard_solution": [
+                2,
+                -1,
+                0,
+                1,
+                -1
+            ]
+        },
+        "2": {
+            "approximation ratio": 0.8980044345898004,
+            "opt_standard_solution": [
+                -1,
+                0,
+                -1,
+                1,
+                2
+            ],
+            "final_standard_solution": [
+                -1,
+                2,
+                1,
+                -1,
+                0
+            ]
+        },
+        "3": {
+            "approximation ratio": 1.0,
+            "opt_standard_solution": [
+                2,
+                0,
+                -1,
+                1,
+                -1
+            ],
+            "final_standard_solution": [
+                2,
+                0,
+                -1,
+                1,
+                -1
+            ]
+        },
+        "4": {
+            "approximation ratio": 0.8181818181818181,
+            "opt_standard_solution": [
+                0,
+                2,
+                -1,
+                1,
+                -1
+            ],
+            "final_standard_solution": [
+                0,
+                1,
+                -1,
+                -1,
+                -1
+            ]
+        }
+    },
+    "conf_jrpInitConf1_circuitConf1": {
+        "1": {
+            "approximation ratio": 0.9722507708119218,
+            "opt_standard_solution": [
+                4,
+                3,
+                2
+            ],
+            "final_standard_solution": [
+                2,
+                3,
+                4
+            ]
+        },
+        "2": {
+            "approximation ratio": 0.8239895697522817,
+            "opt_standard_solution": [
+                2,
+                3,
+                0
+            ],
+            "final_standard_solution": [
+                2,
+                3,
+                4
+            ]
+        },
+        "3": {
+            "approximation ratio": 0.9592274678111589,
+            "opt_standard_solution": [
+                1,
+                2,
+                3
+            ],
+            "final_standard_solution": [
+                2,
+                1,
+                3
+            ]
+        },
+        "4": {
+            "approximation ratio": 1.0,
+            "opt_standard_solution": [
+                3,
+                0,
+                1
+            ],
+            "final_standard_solution": [
+                3,
+                0,
+                1
+            ]
+        }
+    },
+    "conf_jrpInitConf2_circuitConf1": {
+        "0": {
+            "approximation ratio": 0.7636363636363636,
+            "opt_standard_solution": [
+                -1,
+                2,
+                -1,
+                0,
+                -1,
+                1
+            ],
+            "final_standard_solution": [
+                0,
+                2,
+                -1,
+                1,
+                -1,
+                -1
+            ]
+        },
+        "1": {
+            "approximation ratio": 0.922935779816514,
+            "opt_standard_solution": [
+                2,
+                -1,
+                -1,
+                -1,
+                0,
+                1
+            ],
+            "final_standard_solution": [
+                0,
+                -1,
+                -1,
+                -1,
+                1,
+                2
+            ]
+        },
+        "2": {
+            "approximation ratio": 0.9681440443213296,
+            "opt_standard_solution": [
+                1,
+                -1,
+                2,
+                -1,
+                0,
+                -1
+            ],
+            "final_standard_solution": [
+                2,
+                -1,
+                1,
+                -1,
+                0,
+                -1
+            ]
+        },
+        "3": {
+            "approximation ratio": 0.8056801195814649,
+            "opt_standard_solution": [
+                1,
+                0,
+                -1,
+                -1,
+                -1,
+                2
+            ],
+            "final_standard_solution": [
+                1,
+                -1,
+                -1,
+                -1,
+                2,
+                0
+            ]
+        },
+        "4": {
+            "approximation ratio": 0.9202453987730062,
+            "opt_standard_solution": [
+                2,
+                -1,
+                -1,
+                0,
+                -1,
+                1
+            ],
+            "final_standard_solution": [
+                2,
+                0,
+                -1,
+                1,
+                -1,
+                -1
+            ]
+        }
+    },
+    "conf_jrpInitConf3_circuitConf1": {
+        "0": {
+            "approximation ratio": 0.8942307692307693,
+            "opt_standard_solution": [
+                2,
+                1,
+                4
+            ],
+            "final_standard_solution": [
+                0,
+                1,
+                4
+            ]
+        },
+        "1": {
+            "approximation ratio": 0.7404674046740466,
+            "opt_standard_solution": [
+                2,
+                5,
+                1
+            ],
+            "final_standard_solution": [
+                1,
+                -1,
+                5
+            ]
+        },
+        "2": {
+            "approximation ratio": 0.8465396188565698,
+            "opt_standard_solution": [
+                3,
+                0,
+                4
+            ],
+            "final_standard_solution": [
+                0,
+                2,
+                3
+            ]
+        },
+        "3": {
+            "approximation ratio": 0.9732704402515724,
+            "opt_standard_solution": [
+                4,
+                1,
+                3
+            ],
+            "final_standard_solution": [
+                4,
+                2,
+                3
+            ]
+        },
+        "4": {
+            "approximation ratio": 0.9673433362753752,
+            "opt_standard_solution": [
+                0,
+                3,
+                5
+            ],
+            "final_standard_solution": [
+                4,
+                5,
+                1
+            ]
+        }
+    },
+    "conf_jrpInitConf4_circuitConf1": {
+        "0": {
+            "approximation ratio": 0.9009287925696594,
+            "opt_standard_solution": [
+                2,
+                0,
+                -1,
+                1,
+                3
+            ],
+            "final_standard_solution": [
+                3,
+                2,
+                -1,
+                0,
+                1
+            ]
+        },
+        "1": {
+            "approximation ratio": 0.9306930693069307,
+            "opt_standard_solution": [
+                1,
+                3,
+                -1,
+                0,
+                2
+            ],
+            "final_standard_solution": [
+                2,
+                -1,
+                3,
+                0,
+                1
+            ]
+        },
+        "2": {
+            "approximation ratio": 0.9249291784702548,
+            "opt_standard_solution": [
+                2,
+                1,
+                -1,
+                0,
+                3
+            ],
+            "final_standard_solution": [
+                -1,
+                1,
+                -1,
+                3,
+                2
+            ]
+        },
+        "3": {
+            "approximation ratio": 0.7831325301204819,
+            "opt_standard_solution": [
+                -1,
+                0,
+                2,
+                1,
+                3
+            ],
+            "final_standard_solution": [
+                2,
+                0,
+                -1,
+                3,
+                -1
+            ]
+        },
+        "4": {
+            "approximation ratio": 0.7603911980440098,
+            "opt_standard_solution": [
+                -1,
+                -1,
+                1,
+                0,
+                2
+            ],
+            "final_standard_solution": [
+                0,
+                -1,
+                2,
+                -1,
+                3
+            ]
+        }
+    },
+    "conf_jrpInitConf5_circuitConf1": {
+        "0": {
+            "approximation ratio": 0.8529111338100103,
+            "opt_standard_solution": [
+                1,
+                4,
+                0,
+                3
+            ],
+            "final_standard_solution": [
+                2,
+                4,
+                0,
+                3
+            ]
+        },
+        "1": {
+            "approximation ratio": 0.9575163398692811,
+            "opt_standard_solution": [
+                3,
+                0,
+                1,
+                2
+            ],
+            "final_standard_solution": [
+                2,
+                0,
+                1,
+                3
+            ]
+        },
+        "2": {
+            "approximation ratio": 0.9218407596785976,
+            "opt_standard_solution": [
+                2,
+                3,
+                0,
+                1
+            ],
+            "final_standard_solution": [
+                1,
+                2,
+                3,
+                0
+            ]
+        },
+        "3": {
+            "approximation ratio": 0.9542619542619541,
+            "opt_standard_solution": [
+                3,
+                2,
+                4,
+                1
+            ],
+            "final_standard_solution": [
+                1,
+                3,
+                4,
+                -1
+            ]
+        },
+        "4": {
+            "approximation ratio": 0.8992700729927008,
+            "opt_standard_solution": [
+                2,
+                3,
+                0,
+                1
+            ],
+            "final_standard_solution": [
+                4,
+                2,
+                3,
+                0
+            ]
+        }
+    },
+    "conf_jrpInitConf6_circuitConf1": {
+        "0": {
+            "approximation ratio": 0.9947826086956522,
+            "opt_standard_solution": [
+                1,
+                2,
+                3,
+                0
+            ],
+            "final_standard_solution": [
+                3,
+                0,
+                1,
+                2
+            ]
+        },
+        "1": {
+            "approximation ratio": 0.7663265306122449,
+            "opt_standard_solution": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "final_standard_solution": [
+                0,
+                1,
+                -1,
+                3
+            ]
+        },
+        "2": {
+            "approximation ratio": 0.9475409836065574,
+            "opt_standard_solution": [
+                3,
+                2,
+                1,
+                0
+            ],
+            "final_standard_solution": [
+                3,
+                0,
+                1,
+                2
+            ]
+        },
+        "3": {
+            "approximation ratio": 0.969735182849937,
+            "opt_standard_solution": [
+                2,
+                0,
+                3,
+                1
+            ],
+            "final_standard_solution": [
+                0,
+                1,
+                3,
+                2
+            ]
+        },
+        "4": {
+            "approximation ratio": 0.989130434782609,
+            "opt_standard_solution": [
+                2,
+                3,
+                0,
+                -1
+            ],
+            "final_standard_solution": [
+                0,
+                3,
+                2,
+                -1
+            ]
+        }
+    }
+}
