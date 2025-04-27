@@ -289,7 +289,7 @@ directory=None,ax=None):
     # TODO ultima prueba, descomentar esto y probar 
     #ax.set_xscale('log')
     #ax.set_yscale('log')
-    c = ax.contourf(X,Z, Y, levels=20, cmap='viridis')
+    c = ax.contourf(X,Z, Y, levels=10, cmap='viridis')
     cbar = plt.colorbar(c,ax=ax,label=z_label)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
@@ -322,7 +322,7 @@ directory=None,ax=None):
     Ys = [np.array(Y) for Y in Ys]
 
     # Mask the data based on x_threshold
-    masks = [X >= 0.3 for X in Xs]
+    masks = [X >= 0.5 for X in Xs]
     Xs = [np.where(mask, X, np.nan) for X,mask in zip(Xs,masks)]
 
     contours = []
