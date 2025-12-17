@@ -35,6 +35,3 @@ In the experiment with small instances, it has been discovered that a remote typ
 
 An auxiliar experiment where i try a few small JRP instances with Google Colab + GPU.
 
-
-## Experimenting with the 'test3tensorPlot' workflow
-
