@@ -1,6 +1,5 @@
 # Bachelor thesis - Implementing Job Reassignment Problem with Quantum Approximate Optimization Algorithm
 ### Universidad Nacional del Comahue, Argentina, Neuquén
-### Project in progress
 
 Student: Adriano Lusso
 
